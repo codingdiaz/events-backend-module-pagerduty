@@ -2,52 +2,6 @@
 
 A backstage module with events support for [PagerDuty webhook](https://support.pagerduty.com/docs/webhooks) events.
 
-## Verifying Webhooks
-
-https://developer.pagerduty.com/docs/28e906a0e4f36-verifying-signatures
-
-const crypto = require('crypto')
-module.exports = class PagerDutyVerifier {
-constructor(key, version) {
-this.key = key
-this.version = version
-}
-
-    verify(payload, signatures) {
-    	var signature = crypto
-        	.createHmac('sha256', key)
-        	.update(payload)
-        	.digest('hex')
-
-    var signatureWithVersion = version + "=" + signature
-    var signatureList =  signatures.split(",")
-
-    if (signatureList.indexOf(signatureWithVersion) > -1 ) {
-      return true
-    	} else {
-    	  return false
-    	}
-    }
-
-}
-
-{
-"event": {
-"id": "01CH754SM17TWPE2V2H4VPBRO7",
-"event_type": "pagey.ping",
-"resource_type": "pagey",
-"occurred_at": "2021-12-08T22:58:53.510Z",
-"agent": null,
-"client": null,
-"data": {
-"message": "Hello from your friend Pagey!",
-"type": "ping"
-}
-}
-}
-
-X-PagerDuty-Signature
-
 This package is a module for the `events-backend` backend plugin
 and extends the event system with an `PagerDutyEventRouter`.
 
