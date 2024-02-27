@@ -1,0 +1,32 @@
+name: On Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+jobs:
+  ci:
+    if: github.event.pull_request.state != 'closed' 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install yarn
+        run: corepack enable
+      - name: Set yarn version to latest stable
+        run: corepack prepare yarn@stable --activate
+      - name: Install dependencies
+        run: yarn install
+      - name: Lint
+        run: yarn lint
+      - name: Build
+        run: yarn build
+      - name: Test
+        run: yarn test
